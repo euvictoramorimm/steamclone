@@ -1,7 +1,7 @@
-// Define que esta classe pertence ao pacote 'model'
 package br.com.plataforma.steamclone.model;
 
-// Importações do JPA (o "Tradutor" - Jakarta)
+import java.time.LocalDate;
+import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,21 +10,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * @Entity: Diz ao JPA que esta classe é uma tabela no banco.
- * @Table(name = "jogos"): Nome da tabela no banco (boa prática).
- * @Getter, @Setter, @NoArgsConstructor, @AllArgsConstructor: Lombok!
- * Ele cria os getters, setters e construtores por nós.
- */
 @Entity
 @Table(name = "jogos")
 @Getter
@@ -33,29 +25,21 @@ import jakarta.persistence.JoinColumn;
 @AllArgsConstructor
 public class Jogo {
 
-    /**
-     * @Id: Define que este é o campo de Chave Primária.
-     * @GeneratedValue(strategy = GenerationType.IDENTITY):
-     * Define que o banco de dados vai gerar o ID automaticamente (1, 2, 3...).
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Usamos Long para o ID (como discutimos).
+    private Long id;
 
     private String titulo;
     private String genero;
     private double preco;
 
-<<<<<<< HEAD
-    
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
 
-=======
-    /**
-     * @ManyToMany: Muitos Jogos para Muitas Categorias.
-     * @JoinTable: Cria a tabela de junção "jogo_categorias".
-     * joinColumns = @JoinColumn(name = "jogo_id"): Coluna que referencia esta classe (Jogo).
-     * inverseJoinColumns = @JoinColumn(name = "categoria_id"): Coluna que referencia a outra (Categoria).
-     */
+    private LocalDate dataLancamento;
+
+    private String urlCapa;
+
     @ManyToMany
     @JoinTable(
         name = "jogo_categorias",
@@ -63,5 +47,8 @@ public class Jogo {
         inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
     private List<Categoria> categorias;
+    
+    @ManyToMany(mappedBy = "biblioteca")
+    @JsonIgnore
+    private List<Usuario> proprietarios;
 }
->>>>>>> 03d574f9caef7b7d4c63bdfc3111b2b3cd76d41d
