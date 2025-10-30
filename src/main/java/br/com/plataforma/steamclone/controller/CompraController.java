@@ -25,7 +25,14 @@ public class CompraController {
         compra.setStatus("CONCLUÍDA"); // Ou "PENDENTE" se precisar de confirmação
         compra.setCodigoConfirmacao(UUID.randomUUID().toString()); // Gera um código único
         
-        // (Falta calcular o valorTotal e o descontoAplicado)
+        // (Numa aplicação real, aqui calcularíamos o valorTotal
+        // e o descontoAplicado com base na lista de jogos)
+        if (compra.getValorTotal() == null) {
+            compra.setValorTotal(0.0); // Valor padrão
+        }
+        if (compra.getDescontoAplicado() == null) {
+            compra.setDescontoAplicado(0.0); // Valor padrão
+        }
         
         return compraRepository.save(compra);
     }
