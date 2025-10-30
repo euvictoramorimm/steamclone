@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Steam Clone - Loja</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background: #222; color: #eee; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #444; padding: 8px; text-align: left; }
+        th { background: #000; }
+    </style>
+</head>
+<body>
+    <h1>Loja de Jogos - Steam Clone</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Capa (URL)</th>
+                <th>Título</th>
+                <th>Preço</th>
+                <th>Desenvolvedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="jogo : ${jogos}">
+                <td th:text="${jogo.urlCapa}">...url da capa...</td>
+                <td th:text="${jogo.titulo}">...Título do Jogo...</td>
+                
+                <td th:text="'R$ ' + ${#numbers.formatDecimal(jogo.preco, 1, 2, 'COMMA')}">R$ 0,00</td>
+                
+                <td th:text="${jogo.desenvolvedor}">...Dev...</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
