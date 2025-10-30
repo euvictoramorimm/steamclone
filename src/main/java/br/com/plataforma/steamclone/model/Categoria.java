@@ -1,6 +1,7 @@
 package br.com.plataforma.steamclone.model;
 
 import java.util.List;
+import java.time.LocalDate; // Import para data
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,13 @@ public class Categoria {
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
+    // --- 4 NOVOS ATRIBUTOS ---
+    private String urlIcone;
+    private String urlBanner;
+    private Boolean ativa; // Usamos Boolean (Objeto) para poder ser nulo
+    private LocalDate dataCriacao;
+
+    // --- RELACIONAMENTO ---
     @ManyToMany(mappedBy = "categorias")
     @JsonIgnore
     private List<Jogo> jogos;

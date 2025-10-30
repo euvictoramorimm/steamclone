@@ -2,6 +2,7 @@ package br.com.plataforma.steamclone.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID; // Import para gerar códigos únicos
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,14 @@ public class Compra {
     
     private Double valorTotal;
 
+    // --- 5 NOVOS ATRIBUTOS ---
+    private String metodoPagamento;
+    private String status; // Ex: "PENDENTE", "CONCLUÍDA", "CANCELADA"
+    private String codigoConfirmacao; // Um código único (ex: UUID)
+    private Double descontoAplicado;
+    private String notaFiscal; // Link para a NF-e
+
+    // --- RELACIONAMENTOS ---
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

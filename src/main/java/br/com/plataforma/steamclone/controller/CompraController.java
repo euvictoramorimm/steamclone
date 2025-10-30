@@ -8,6 +8,7 @@ import br.com.plataforma.steamclone.repository.CompraRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID; // Para gerar o código de confirmação
 
 @RestController
 @RequestMapping("/compras")
@@ -16,10 +17,16 @@ public class CompraController {
     @Autowired
     private CompraRepository compraRepository;
 
+    // --- CRUD BÁSICO (Melhorado) ---
     @PostMapping
     public Compra adicionarCompra(@RequestBody Compra compra) {
+        // Lógica de negócio ao criar a compra
         compra.setDataCompra(LocalDateTime.now());
-        // (Aqui faltaria a lógica de calcular o valorTotal)
+        compra.setStatus("CONCLUÍDA"); // Ou "PENDENTE" se precisar de confirmação
+        compra.setCodigoConfirmacao(UUID.randomUUID().toString()); // Gera um código único
+        
+        // (Falta calcular o valorTotal e o descontoAplicado)
+        
         return compraRepository.save(compra);
     }
 
@@ -30,12 +37,9 @@ public class CompraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Compra> buscarCompraPorId(@PathVariable Long id) {
-        Optional<Compra> compraOpt = compraRepository.findById(id);
-        if (compraOpt.isPresent()) {
-            return ResponseEntity.ok(compraOpt.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return compraRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -43,13 +47,7 @@ public class CompraController {
         if (!compraRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        compraAtualizada.setId(id); 
-        
-        if(compraAtualizada.getDataCompra() == null) {
-            compraRepository.findById(id).ifPresent(c -> 
-                compraAtualizada.setDataCompra(c.getDataCompra()));
-        }
-        
+        compraAtualizada.setId(id);
         Compra compraSalva = compraRepository.save(compraAtualizada);
         return ResponseEntity.ok(compraSalva);
     }
@@ -61,5 +59,41 @@ public class CompraController {
         }
         compraRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // --- 3 NOVOS MÉTODOS ---
+
+    /**
+     * MÉTODO 1 NOVO: Listar Compras de um Usuário
+     * @GetMapping("/por-usuario/{usuarioId}"): GET http://localhost:8080/compras/por-usuario/1
+     */
+    @GetMapping("/por-usuario/{usuarioId}")
+    public List<Compra> listarComprasDoUsuario(@PathVariable Long usuarioId) {
+        return compraRepository.findByUsuario_Id(usuarioId);
+    }
+
+    /**
+     * MÉTODO 2 NOVO: Cancelar uma Compra
+     * @PatchMapping("/{id}/cancelar"): PATCH http://localhost:8080/compras/1/cancelar
+     */
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<Compra> cancelarCompra(@PathVariable Long id) {
+        Optional<Compra> compraOpt = compraRepository.findById(id);
+        if (compraOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Compra compra = compraOpt.get();
+        compra.setStatus("CANCELADA");
+        compraRepository.save(compra);
+        return ResponseEntity.ok(compra);
+    }
+
+    /**
+     * MÉTODO 3 NOVO: Buscar Compras por Status
+     * @GetMapping("/buscar"): GET http://localhost:8080/compras/buscar?status=PENDENTE
+     */
+    @GetMapping("/buscar")
+    public List<Compra> buscarComprasPorStatus(@RequestParam String status) {
+        return compraRepository.findByStatus(status);
     }
 }

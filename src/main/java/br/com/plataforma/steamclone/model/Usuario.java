@@ -1,6 +1,7 @@
 package br.com.plataforma.steamclone.model;
 
 import java.util.List;
+import java.time.LocalDate; // Import para data
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,14 @@ public class Usuario {
     private String email;
     private String senha;
 
+    // --- 5 NOVOS ATRIBUTOS ---
+    private String nomeCompleto;
+    private LocalDate dataNascimento;
+    private String pais;
+    private Double saldoCarteira;
+    private String urlAvatar;
+    
+    // --- RELACIONAMENTO (Biblioteca) ---
     @ManyToMany
     @JoinTable(
         name = "usuario_biblioteca",
