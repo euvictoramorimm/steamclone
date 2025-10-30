@@ -37,9 +37,16 @@ public class Jogo {
     private String descricao;
 
     private LocalDate dataLancamento;
-
     private String urlCapa;
 
+    // --- 5 NOVOS ATRIBUTOS ---
+    private String desenvolvedor;
+    private String publicadora;
+    private Double avaliacaoMedia; // Usamos Double (Objeto) para poder ser nulo
+    private Integer classificacaoIndicativa; // Usamos Integer (Objeto)
+    private String urlTrailer;
+
+    // --- RELACIONAMENTOS ---
     @ManyToMany
     @JoinTable(
         name = "jogo_categorias",
