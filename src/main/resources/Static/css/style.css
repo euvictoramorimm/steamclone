@@ -1,0 +1,70 @@
+/* Esquema de cores (Roxo/Dark) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b1a21; /* Roxo bem escuro */
+    color: #e0e1dd; /* Texto claro */
+    margin: 0;
+    padding: 2em;
+}
+
+h1 {
+    color: #a29bfe; /* Roxo claro */
+    border-bottom: 2px solid #a29bfe;
+    padding-bottom: 10px;
+}
+
+/* O "Grid" da Loja (em vez da tabela) */
+.game-grid {
+    display: grid;
+    /* Cria colunas automáticas: 
+       - 300px de largura mínima
+       - 1fr (fração) de largura máxima
+       Isto torna o layout responsivo! */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; /* Espaço entre os cartões */
+}
+
+/* O "Cartão" do Jogo */
+.game-card {
+    background-color: #2a2a35; /* Roxo mais claro */
+    border-radius: 8px;
+    overflow: hidden; /* Para a imagem não "vazar" */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s; /* Efeito ao passar o mouse */
+}
+
+.game-card:hover {
+    transform: scale(1.03); /* Aumenta o cartão */
+}
+
+/* A imagem (Capa do Jogo) */
+.game-card img {
+    width: 100%; /* Faz a imagem ocupar o cartão todo */
+    height: 170px; /* Altura fixa */
+    object-fit: cover; /* Garante que a imagem cubra o espaço */
+}
+
+/* Os detalhes do jogo (embaixo da imagem) */
+.game-details {
+    padding: 15px;
+}
+
+.game-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    margin: 0 0 10px 0;
+}
+
+.game-dev {
+    font-size: 0.9em;
+    color: #c0c0c0;
+    margin: 0 0 15px 0;
+}
+
+.game-price {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #a29bfe; /* Roxo claro */
+    text-align: right;
+}
