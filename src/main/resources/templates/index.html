@@ -1,64 +1,35 @@
-<h1>Loja de Jogos - Steam Clone</h1>
-
-    <a href="/jogos/novo" style="color: #a29bfe; font-size: 1.2em;">+ Adicionar Novo Jogo</a>
-    
-    <br><br>
-
-    ```
-
----
-
-### Passo 2: Criar a "Tela" do Formulário (`form-jogo.html`)
-
-Agora, vamos criar a página para onde esse link aponta.
-
-**Sua Ação:**
-1.  Na mesma pasta `src/main/resources/templates/`, crie um novo ficheiro chamado **`form-jogo.html`**.
-2.  Cole este código lá dentro. (Preste atenção nos comentários `th:...`!)
-
-**`form-jogo.html` (Código Completo):**
-```html
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Adicionar Jogo</title>
+    <title>Steam Clone</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        /* CSS extra para o formulário */
-        form { max-width: 600px; margin: 0 auto; }
-        div { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 8px; background: #333; color: #eee; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
-        button { background: #a29bfe; color: #111; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    </style>
 </head>
 <body>
-    <h1>Adicionar Novo Jogo</h1>
 
-    <form th:action="@{/jogos/salvar}" th:object="${jogo}" method="post">
+    <h1>Loja de Jogos - Steam Clone</h1>
     
-        <div>
-            <label for="titulo">Título:</label>
-            <input type="text" th:field="*{titulo}" placeholder="Ex: The Witcher 3">
-        </div>
-        
-        <div>
-            <label for="desenvolvedor">Desenvolvedor:</label>
-            <input type="text" th:field="*{desenvolvedor}" placeholder="Ex: CD Projekt Red">
-        </div>
+    <a href="/jogos/novo" style="color: #a29bfe; font-size: 1.2em; margin-bottom: 20px; display: inline-block;">
+        + Adicionar Novo Jogo
+    </a>
 
-        <div>
-            <label for="preco">Preço:</label>
-            <input type="number" step="0.01" th:field="*{preco}" placeholder="Ex: 129.90">
+    <div class="game-grid">
+        
+        <div class="game-card" th:each="jogo : ${jogos}">
+            
+            <img th:src="${jogo.urlCapa}" alt="Capa do Jogo">
+            
+            <div class="game-details">
+                <div class="game-title" th:text="${jogo.titulo}">Título do Jogo</div>
+                <div class="game-dev" th:text="${jogo.desenvolvedor}">Desenvolvedor</div>
+                
+                <div class="game-price" th:text="${'R$ ' + #numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">
+                    R$ 99,90
+                </div>
+            </div>
         </div>
         
-        <div>
-            <label for="urlCapa">URL da Capa:</label>
-            <input type="text" th:field="*{urlCapa}" placeholder="Ex: https://placehold.co/600x340/...">
-        </div>
-        
-        <button type="submit">Salvar Jogo</button>
-    </form>
+    </div>
+
 </body>
 </html>
