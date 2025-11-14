@@ -33,28 +33,6 @@ public class JogoController {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    /**
-     * --- MÉTODO 1 (A NOSSA NOVA PÁGINA INICIAL) ---
-     * @GetMapping("/"): Mapeia pedidos GET para a raiz do site (http://localhost:8080/)
-     *
-     * @param model O "caixote" que o Spring nos dá para levar dados para o HTML.
-     * @return String "index": O nome do ficheiro HTML que queremos mostrar
-     * (Spring vai procurar /resources/templates/index.html).
-     */
-    @GetMapping("/")
-    public String listarTodosJogos(Model model) {
-        
-        // 1. Busca todos os jogos no banco de dados
-        List<Jogo> listaDeJogos = jogoRepository.findAll();
-        
-        // 2. "Carrega" a lista de jogos no "caixote" (model)
-        // O nome "jogos" TEM que ser o mesmo que usámos no HTML (th:each="jogo : ${jogos}")
-        model.addAttribute("jogos", listaDeJogos);
-        
-        // 3. Retorna o nome do ficheiro HTML
-        return "index";
-    }
-
     
     /* ==================================================================
     NOTA: Os métodos abaixo (@PostMapping, @PutMapping, etc.)
