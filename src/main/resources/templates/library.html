@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Biblioteca</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">Steam<span>Clone</span></a>
+        <div class="nav-links">
+            <span style="color: #fff;">Olá, <b th:text="${currentUser.nomeCompleto}">User</b></span>
+            <a href="/" class="nav-btn">Voltar para Loja</a>
+            <form th:action="@{/logout}" method="post" class="logout-form"><button>Sair</button></form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="section-title">Minha Biblioteca</h2>
+
+        <div th:if="${jogos.empty}" style="text-align: center; color: #aaa; margin-top: 50px;">
+            <h3>Você ainda não tem jogos.</h3>
+            <a href="/" class="btn-primary" style="margin-top: 20px; display: inline-block;">Ir para a Loja</a>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card" th:each="jogo : ${jogos}">
+                <img th:src="${jogo.urlCapa}" alt="Capa">
+                <div class="game-details">
+                    <div class="game-title" th:text="${jogo.titulo}">Título</div>
+                    <div class="game-footer" style="justify-content: center;">
+                        <button class="btn-buy" style="background-color: #4cd137; width: 100%; color: #000; font-weight: bold;">JOGAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

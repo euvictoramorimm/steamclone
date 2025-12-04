@@ -29,6 +29,32 @@ public class WebController {
     
     @Autowired
     private UsuarioRepository usuarioRepository; // <-- Precisamos dele para buscar os dados
+    
+    @Autowired
+    private br.com.plataforma.steamclone.service.CompraService compraService;
+
+    // --- COMPRAR JOGO ---
+    @PostMapping("/comprar/{id}")
+    public String comprarJogo(@PathVariable Long id, Principal principal) {
+        if (principal == null) return "redirect:/login";
+
+        Usuario usuario = usuarioRepository.findByEmail(principal.getName()).get();
+        compraService.realizarCompra(usuario, id);
+
+        return "redirect:/biblioteca";
+    }
+
+    // --- VER BIBLIOTECA ---
+    @GetMapping("/biblioteca")
+    public String mostrarBiblioteca(Model model, Principal principal) {
+        if (principal == null) return "redirect:/login";
+
+        Usuario usuario = usuarioRepository.findByEmail(principal.getName()).get();
+        model.addAttribute("currentUser", usuario);
+        model.addAttribute("jogos", usuario.getBiblioteca()); // Manda só os jogos dele
+        
+        return "library";
+    }
 
     // --- PÁGINA INICIAL (ATUALIZADA) ---
     @GetMapping("/")

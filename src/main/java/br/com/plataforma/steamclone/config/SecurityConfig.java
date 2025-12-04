@@ -20,7 +20,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .formLogin(form -> form
@@ -29,12 +29,19 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/jogos/**", "/css/**", "/h2-console/**", "/login", "/registrar").permitAll() 
+                // 1. Coisas públicas (todo mundo vê)
+                .requestMatchers("/", "/css/**", "/h2-console/**", "/login", "/registrar").permitAll()
+                
+                // 2. Coisas SÓ DE ADMIN (Adicionar, Editar, Excluir, Salvar)
+                .requestMatchers("/jogos/novo", "/jogos/editar/**", "/jogos/deletar/**", "/jogos/salvar").hasAuthority("ADMIN")
+                
+                // 3. Coisas de USUÁRIO LOGADO (Comprar, Ver Biblioteca)
+                // (O Admin também consegue fazer isso pq ele está autenticado)
                 .anyRequest().authenticated() 
             )
             .userDetailsService(customUserDetailsService)
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/jogos/salvar", "/registrar")); 
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/jogos/salvar", "/registrar", "/comprar/**")); 
 
         return http.build();
     }

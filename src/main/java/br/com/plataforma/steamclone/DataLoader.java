@@ -95,7 +95,7 @@ public class DataLoader implements CommandLineRunner {
         if (usuarioRepository.findByEmail("admin@steam.com").isEmpty()) {
             
             Usuario admin = new Usuario();
-            admin.setNomeCompleto("Gabe Newell (Admin)");
+            admin.setNomeCompleto("Victor de Amorim (Admin)");
             admin.setEmail("admin@steam.com");
             // AQUI ESTÁ O TRUQUE: Usamos o encoder injetado lá em cima
             admin.setSenha(passwordEncoder.encode("admin123")); 
