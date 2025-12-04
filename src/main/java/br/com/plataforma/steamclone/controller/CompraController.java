@@ -5,76 +5,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.com.plataforma.steamclone.model.Compra;
 import br.com.plataforma.steamclone.repository.CompraRepository;
-import br.com.plataforma.steamclone.service.NotaFiscalFactory; 
-import org.slf4j.Logger; 
-import org.slf4j.LoggerFactory; 
-import org.springframework.http.HttpStatus; 
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID; 
+import java.util.UUID; // Para gerar o código de confirmação
 
 @RestController
 @RequestMapping("/compras")
 public class CompraController {
 
-   
-    private static final Logger logger = LoggerFactory.getLogger(CompraController.class); 
-
     @Autowired
     private CompraRepository compraRepository;
 
-    
-    @Autowired
-    private NotaFiscalFactory notaFiscalFactory; 
-
-    // --- CRUD BÁSICO (adicionarCompra MODIFICADO) ---
+    // --- CRUD BÁSICO (Melhorado) ---
     @PostMapping
-    // Mudamos o retorno para ResponseEntity<?> para poder retornar o erro no catch
-    public ResponseEntity<?> adicionarCompra(@RequestBody Compra compra) { 
-
-
-        logger.debug("Tentativa de adicionar nova compra. Valor: {}", compra.getValorTotal());
+    public Compra adicionarCompra(@RequestBody Compra compra) {
+        // Lógica de negócio ao criar a compra
+        compra.setDataCompra(LocalDateTime.now());
+        compra.setStatus("CONCLUÍDA"); // Ou "PENDENTE" se precisar de confirmação
+        compra.setCodigoConfirmacao(UUID.randomUUID().toString()); // Gera um código único
         
-        System.out.println(">>> [CompraController] Iniciando transação de compra.");
-
-        try { 
-            
-            // Lógica de negócio ao criar a compra (igual ao original, mais a NF)
-            compra.setDataCompra(LocalDateTime.now());
-            compra.setStatus("CONCLUÍDA"); 
-            compra.setCodigoConfirmacao(UUID.randomUUID().toString()); 
-            
-            
-            String notaFiscal = notaFiscalFactory.gerarNotaFiscal("DIGITAL");
-            compra.setNotaFiscal(notaFiscal); // Define o novo campo NotaFiscal no Model Compra
-            
-            // (Lógica de valores - igual ao original)
-            if (compra.getValorTotal() == null) {
-                compra.setValorTotal(0.0); 
-            }
-            if (compra.getDescontoAplicado() == null) {
-                compra.setDescontoAplicado(0.0);
-            }
-            
-            Compra compraSalva = compraRepository.save(compra);
-            logger.info("Compra concluída com sucesso. ID: {}", compraSalva.getId());
-            System.out.println("<<< [CompraController] Compra finalizada com sucesso. ID: " + compraSalva.getId());
-
-            // Retorna status 201 (Created)
-            return ResponseEntity.status(HttpStatus.CREATED).body(compraSalva);
-
-        } catch (Exception e) { // ⭐️
-            
-           
-            logger.error("ERRO FATAL ao salvar compra: {}", e.getMessage(), e);
-            
-            System.err.println("!!! ERRO NO PROCESSAMENTO: " + e.getMessage());
-
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao processar a compra: " + e.getMessage());
+        // (Numa aplicação real, aqui calcularíamos o valorTotal
+        // e o descontoAplicado com base na lista de jogos)
+        if (compra.getValorTotal() == null) {
+            compra.setValorTotal(0.0); // Valor padrão
         }
+        if (compra.getDescontoAplicado() == null) {
+            compra.setDescontoAplicado(0.0); // Valor padrão
+        }
+        
+        return compraRepository.save(compra);
     }
 
     @GetMapping
@@ -108,7 +68,7 @@ public class CompraController {
         return ResponseEntity.noContent().build();
     }
 
-    // --- MÉTODOS ADICIONAIS ---
+    // --- 3 NOVOS MÉTODOS ---
 
     /**
      * MÉTODO 1 NOVO: Listar Compras de um Usuário

@@ -12,7 +12,6 @@ import br.com.plataforma.steamclone.model.Jogo;
 import br.com.plataforma.steamclone.model.Usuario;
 import br.com.plataforma.steamclone.repository.JogoRepository;
 import br.com.plataforma.steamclone.repository.UsuarioRepository;
-import br.com.plataforma.steamclone.service.IUsuarioService;
 import br.com.plataforma.steamclone.service.UsuarioService;
 
 
@@ -34,9 +33,6 @@ public class WebController {
 
     @Autowired
     private br.com.plataforma.steamclone.service.CompraService compraService;
-
-    @Autowired
-    private IUsuarioService usuarioService;
 
     // --- CARTEIRA: ADICIONAR SALDO ---
     @PostMapping("/adicionar-saldo")
