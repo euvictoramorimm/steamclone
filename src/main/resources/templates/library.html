@@ -54,4 +54,32 @@
     <div class="container">
         <h2 class="section-title"><i class="bi bi-joystick"></i> Minha Biblioteca</h2>
 
-        <div th:if="${jogos.empty}" style="text-align: center; color: #
+        <div th:if="${jogos.empty}" style="text-align: center; color: #aaa; margin-top: 50px;">
+            <i class="bi bi-controller" style="font-size: 4rem; color: #333;"></i>
+            <h3>Você ainda não tem jogos.</h3>
+            <p>Que tal explorar a loja?</p>
+            <a href="/" class="btn-primary" style="margin-top: 20px; display: inline-block;">
+                <i class="bi bi-cart"></i> Ir para a Loja
+            </a>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card" th:each="jogo : ${jogos}">
+                <a th:href="@{/jogo/{id}(id=${jogo.id})}" style="cursor: pointer; display: block;">
+                    <img th:src="${jogo.urlCapa}" alt="Capa">
+                </a>
+
+                <div class="game-details">
+                    <div class="game-title" th:text="${jogo.titulo}">Título</div>
+                    
+                    <div class="game-footer" style="justify-content: center;">
+                        <button class="btn-buy" style="background-color: #4cd137; width: 100%; color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="bi bi-play-circle-fill" style="font-size: 1.2rem;"></i> JOGAR
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
