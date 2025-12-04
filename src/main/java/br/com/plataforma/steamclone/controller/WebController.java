@@ -6,48 +6,67 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import br.com.plataforma.steamclone.model.Jogo;
+import br.com.plataforma.steamclone.model.Usuario; // <-- Importante
 import br.com.plataforma.steamclone.repository.JogoRepository;
+import br.com.plataforma.steamclone.service.UsuarioService; // <-- O nosso Chef!
+
 import java.util.List;
 
-@Controller // Este é o controlador para as PÁGINAS WEB
+@Controller
 public class WebController {
 
     @Autowired
     private JogoRepository jogoRepository;
 
-    /**
-     * MÉTODO 1: Mostrar a Página Inicial (Listar Jogos)
-     * URL: GET http://localhost:8081/
-     */
+    @Autowired
+    private UsuarioService usuarioService; // <-- Injetando o Chef
+
+    // --- PÁGINA INICIAL ---
     @GetMapping("/")
     public String mostrarPaginaInicial(Model model) {
         List<Jogo> listaDeJogos = jogoRepository.findAll();
         model.addAttribute("jogos", listaDeJogos);
-        return "index"; // Mostra o index.html
+        return "index";
     }
 
-    /**
-     * MÉTODO 2: Mostrar o Formulário de Novo Jogo
-     * URL: GET http://localhost:8081/jogos/novo
-     */
+    // --- JOGOS (ADMIN) ---
     @GetMapping("/jogos/novo")
     public String mostrarFormularioNovoJogo(Model model) {
-        // Cria um objeto Jogo "em branco" para o Thymeleaf
         model.addAttribute("jogo", new Jogo());
-        return "form-jogo"; // Mostra o form-jogo.html
+        return "form-jogo";
     }
 
-    /**
-     * MÉTODO 3: Salvar o Novo Jogo (Recebe os dados do formulário)
-     * URL: POST http://localhost:8081/jogos/salvar
-     */
     @PostMapping("/jogos/salvar")
     public String salvarNovoJogo(@ModelAttribute Jogo jogo) {
-        // Salva o novo jogo no banco
         jogoRepository.save(jogo);
-        
-        // Redireciona o browser de volta para a página inicial
         return "redirect:/";
+    }
+
+    // --- NOVO: CADASTRO DE USUÁRIO ---
+    
+    // 1. Mostrar a tela de cadastro
+    @GetMapping("/registrar")
+    public String mostrarFormularioCadastro(Model model) {
+        model.addAttribute("usuario", new Usuario()); // Manda um usuário em branco
+        return "register"; // Mostra o register.html
+    }
+
+    // 2. Receber os dados e criar o usuário
+    @PostMapping("/registrar")
+    public String registrarUsuario(@ModelAttribute Usuario usuario) {
+        // Chama o Chef para criptografar a senha e salvar
+        usuarioService.criarNovoUsuario(usuario);
+        
+        // Manda o usuário para a tela de login depois de cadastrar
+        return "redirect:/login"; 
+    }
+    
+    // --- NOVO: TELA DE LOGIN ---
+    // (O Spring Security faz a mágica, mas precisamos da página)
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "login"; // Mostra o login.html
     }
 }

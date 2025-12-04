@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar Conta - Steam Clone</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        form { max-width: 400px; margin: 2em auto; }
+        div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; background: #333; color: #eee; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
+        button { background: #55efc4; color: #111; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        a { display: block; text-align: center; margin-top: 10px; color: #a29bfe; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Criar Nova Conta</h1>
+
+    <form th:action="@{/registrar}" th:object="${usuario}" method="post">
+        
+        <div>
+            <label for="nomeCompleto">Nome Completo:</label>
+            <input type="text" th:field="*{nomeCompleto}" placeholder="Seu nome" required>
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" th:field="*{email}" placeholder="seu@email.com" required>
+        </div>
+        
+        <div>
+            <label for="senha">Senha:</label>
+            <input type="password" th:field="*{senha}" required>
+        </div>
+        
+        <button type="submit">Criar Conta</button>
+        
+        <a href="/login">Já tenho conta (Login)</a>
+    </form>
+</body>
+</html>
