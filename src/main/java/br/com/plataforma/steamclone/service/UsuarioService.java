@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.plataforma.steamclone.model.Usuario;
 import br.com.plataforma.steamclone.repository.UsuarioRepository;
-
 @Service
 public class UsuarioService {
 
@@ -17,7 +16,7 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;
     
     @Autowired
-    private N8nService n8nService; // <--- Injete o serviço do N8n
+    private N8nService n8nService; 
 
     public Usuario criarNovoUsuario(Usuario usuario) {
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());

@@ -1,17 +1,19 @@
 package br.com.plataforma.steamclone.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import br.com.plataforma.steamclone.model.Usuario;
-import br.com.plataforma.steamclone.model.Jogo;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import br.com.plataforma.steamclone.model.Jogo;
+import br.com.plataforma.steamclone.model.Usuario;
 
 @Service
 public class N8nService {
 
     // 👇 IMPORTANTE: Coloque o URL do seu Webhook do n8n aqui!
-    private static final String N8N_WEBHOOK_URL = "https://seu-n8n.com/webhook/....";
+    private static final String N8N_WEBHOOK_URL = "https://n8nprojeto.app.n8n.cloud/webhook-test/steam-clone";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
