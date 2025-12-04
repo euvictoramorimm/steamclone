@@ -21,7 +21,7 @@ public class CompraService {
     private CompraRepository compraRepository;
 
     @Autowired
-    private N8nService n8nService; // <-- O mensageiro
+    private N8nService n8nService;
 
     public void realizarCompra(Usuario usuario, Long jogoId) {
         Jogo jogo = jogoRepository.findById(jogoId)
@@ -32,8 +32,18 @@ public class CompraService {
             return; // Já tem, não faz nada
         }
 
+        // --- CORREÇÃO AQUI: VERIFICA SE TEM DINHEIRO ---
+        if (usuario.getSaldoCarteira() < jogo.getPreco()) {
+            throw new RuntimeException("Saldo insuficiente! Deposite mais dinheiro.");
+        }
+
+        // --- CORREÇÃO AQUI: COBRA O VALOR ---
+        usuario.setSaldoCarteira(usuario.getSaldoCarteira() - jogo.getPreco());
+
         // 2. Adiciona na Biblioteca
         usuario.getBiblioteca().add(jogo);
+        
+        // Salva o usuário (agora com saldo atualizado e jogo novo)
         usuarioRepository.save(usuario);
 
         // 3. Cria o Recibo (Compra)
