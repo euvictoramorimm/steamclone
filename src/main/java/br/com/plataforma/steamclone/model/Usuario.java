@@ -1,6 +1,7 @@
 package br.com.plataforma.steamclone.model;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,5 +46,5 @@ public class Usuario {
         joinColumns = @JoinColumn(name = "usuario_id"),
         inverseJoinColumns = @JoinColumn(name = "jogo_id")
     )
-    private List<Jogo> biblioteca;
+    private List<Jogo> biblioteca = new ArrayList<>();
 }

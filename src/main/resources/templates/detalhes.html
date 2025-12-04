@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${jogo.titulo} + ' - SteamClone'">Detalhes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* CSS Específico desta página para ficar bonitão */
+        .game-banner {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+        .content-wrapper {
+            max-width: 1000px;
+            margin: -100px auto 0; /* Puxa para cima da imagem */
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        .header-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        .cover-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .game-info h1 { font-size: 3rem; margin-bottom: 10px; text-shadow: 2px 2px 4px #000; }
+        .meta-info { color: #aaa; margin-bottom: 20px; font-size: 1.1rem; }
+        .price-tag {
+            font-size: 2rem;
+            color: #4cd137;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .desc-box {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        .video-container {
+            margin-top: 40px;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">Steam<span>Clone</span></a>
+        <div class="nav-links">
+            <a href="/" class="nav-btn"><i class="bi bi-arrow-left"></i> Voltar</a>
+        </div>
+    </nav>
+
+    <img th:src="${jogo.urlCapa}" class="game-banner">
+
+    <div class="content-wrapper">
+        <div class="header-grid">
+            
+            <div>
+                <img th:src="${jogo.urlCapa}" class="cover-img">
+                
+                <div style="margin-top: 20px;">
+                    <span class="price-tag" th:text="'R$ ' + ${#numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">R$ 99,90</span>
+
+                    <div th:if="${currentUser == null}">
+                        <a href="/login" class="btn-primary" style="width: 100%; display: block; text-align: center; font-size: 1.2rem;">Fazer Login para Comprar</a>
+                    </div>
+
+                    <div th:if="${currentUser != null}">
+                        <a th:if="${possuiJogo}" href="#" class="btn-primary" style="width: 100%; display: block; text-align: center; background-color: #0984e3; font-size: 1.2rem;">
+                            <i class="bi bi-play-fill"></i> JOGAR AGORA
+                        </a>
+
+                        <form th:unless="${possuiJogo}" th:action="@{/comprar/{id}(id=${jogo.id})}" method="post">
+                            <button type="submit" class="btn-primary" style="width: 100%; background-color: #4cd137; color: #000; font-size: 1.2rem;">
+                                COMPRAR
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-info">
+                <h1 th:text="${jogo.titulo}">Título do Jogo</h1>
+                
+                <div class="meta-info">
+                    <i class="bi bi-building"></i> <span th:text="${jogo.desenvolvedor}">Dev</span> | 
+                    <i class="bi bi-calendar"></i> <span th:text="${jogo.dataLancamento}">2024</span> |
+                    <span style="border: 1px solid #aaa; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;" th:text="${jogo.classificacaoIndicativa} + ' ANOS'">18</span>
+                </div>
+
+                <div class="desc-box">
+                    <h3>Sobre o Jogo</h3>
+                    <p th:text="${jogo.descricao}">Descrição completa do jogo...</p>
+                </div>
+
+                <div class="video-container" th:if="${jogo.urlTrailer != null}">
+                    <iframe th:src="${jogo.urlTrailer.replace('watch?v=', 'embed/')}" 
+                            title="Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

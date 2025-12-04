@@ -2,8 +2,12 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SteamClone - Loja</title>
+    
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 
@@ -11,7 +15,9 @@
         <a href="/" class="logo">Steam<span>Clone</span></a>
 
         <div class="nav-links">
-            <a th:if="${currentUser != null && currentUser.papel == 'ADMIN'}" href="/jogos/novo" class="nav-btn">+ Add Jogo</a>
+            <a th:if="${currentUser != null && currentUser.papel == 'ADMIN'}" href="/jogos/novo" class="nav-btn" style="color: #fab1a0;">
+                <i class="bi bi-plus-square"></i> Add Jogo
+            </a>
             
             <div th:if="${currentUser == null}" style="display: flex; gap: 15px; align-items: center;">
                 <a href="/login" class="nav-btn">Entrar</a>
@@ -19,25 +25,80 @@
             </div>
 
             <div th:if="${currentUser != null}" style="display: flex; align-items: center; gap: 20px;">
-                <span style="color: #fff;">
-                    Olá, <b th:text="${currentUser.nomeCompleto}">Usuário</b>
-                    <span style="color: #4cd137; font-size: 0.8em; margin-left: 5px;" 
-                          th:text="'(R$ ' + ${currentUser.saldoCarteira} + ')'"></span>
+                
+                <a href="/biblioteca" class="nav-btn" style="display: flex; align-items: center; gap: 5px;">
+                    <i class="bi bi-collection-play-fill" style="font-size: 1.2rem;"></i> 
+                    <span>Biblioteca</span>
+                </a>
+
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); padding: 5px 15px; border-radius: 20px; border: 1px solid #444;">
+                    
+                    <i class="bi bi-wallet2" style="color: #4cd137;"></i>
+                    <span style="color: #4cd137; font-weight: bold; margin-right: 5px;" 
+                          th:text="'R$ ' + ${#numbers.formatDecimal(currentUser.saldoCarteira, 1, 'POINT', 2, 'COMMA')}"></span>
+                    
+                    <form th:action="@{/adicionar-saldo}" method="post" style="margin:0;">
+                        <input type="hidden" name="valor" value="50.00">
+                        <button type="submit" title="Depositar R$ 50" style="background: none; border: none; cursor: pointer;">
+                            <i class="bi bi-plus-circle-fill" style="color: #4cd137; font-size: 1.2rem;"></i>
+                        </button>
+                    </form>
+
+                    <form th:action="@{/retirar-saldo}" method="post" style="margin:0;">
+                        <input type="hidden" name="valor" value="50.00">
+                        <button type="submit" title="Sacar R$ 50" style="background: none; border: none; cursor: pointer;">
+                            <i class="bi bi-dash-circle-fill" style="color: #ff7675; font-size: 1.2rem;"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <span style="color: #fff; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+                    <i class="bi bi-person-circle"></i>
+                    <b th:text="${currentUser.nomeCompleto.split(' ')[0]}">User</b>
                 </span>
                 
                 <form th:action="@{/logout}" method="post" class="logout-form">
-                    <button type="submit">Sair</button>
+                    <button type="submit" title="Sair" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem;">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
                 </form>
             </div>
         </div>
     </nav>
 
     <div class="container">
+
+        <div style="margin-bottom: 30px; display: flex; justify-content: center;">
+            <form action="/" method="get" style="width: 100%; max-width: 600px; display: flex; gap: 10px;">
+                
+                <input type="text" name="busca" placeholder="Busque por um jogo..." 
+                       th:value="${param.busca}"
+                       style="width: 100%; padding: 12px; border-radius: 25px; border: 1px solid #444; background-color: #1e1e1e; color: #fff; outline: none;">
+                
+                <button type="submit" style="background-color: #0078f2; color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer;">
+                    <i class="bi bi-search"></i>
+                </button>
+                
+                <a th:if="${param.busca != null}" href="/" 
+                   style="display: flex; align-items: center; justify-content: center; background-color: #333; color: white; text-decoration: none; padding: 0 15px; border-radius: 25px; margin-left: 5px;">
+                   <i class="bi bi-x-lg"></i>
+                </a>
+            </form>
+        </div>
+
+        <div th:if="${jogos.empty}" style="text-align: center; color: #aaa; margin: 40px 0;">
+            <h3>Nenhum jogo encontrado. 😢</h3>
+            <a href="/" style="color: #0078f2;">Limpar pesquisa</a>
+        </div>
+
         <h2 class="section-title">Destaques da Semana</h2>
 
         <div class="game-grid">
             <div class="game-card" th:each="jogo : ${jogos}">
+            <a th:href="@{/jogo/{id}(id=${jogo.id})}" style="cursor: pointer;">
                 <img th:src="${jogo.urlCapa}" alt="Capa do Jogo">
+            </a>
+    
                 
                 <div class="game-details">
                     <div class="game-title" th:text="${jogo.titulo}">Título</div>
@@ -47,29 +108,36 @@
                         <div class="game-price" th:text="${'R$ ' + #numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">
                             R$ 99,90
                         </div>
-                        
-                        <div th:if="${currentUser != null && currentUser.papel == 'ADMIN'}" style="display: flex; gap: 5px;">
-    
-                            <a th:href="@{/jogos/editar/{id}(id=${jogo.id})}" 
-                                style="background-color: #333; color: #a29bfe; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.9em;">
-                                Editar
-                            </a>
-    
-                            <a th:href="@{/jogos/deletar/{id}(id=${jogo.id})}" 
-                                    style="background-color: #333; color: #ff7675; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.9em;"
-                                onclick="return confirm('Tem certeza que deseja excluir este jogo?');">
-                                Excluir
+
+                        <a th:if="${currentUser == null}" href="/login" class="btn-buy" style="text-decoration:none; text-align:center;">
+                            Comprar
+                        </a> 
+
+                        <div th:if="${currentUser != null}" style="width: 100%; display: flex; justify-content: flex-end;">
+                            
+                            <a th:if="${#lists.contains(currentUser.biblioteca, jogo)}" 
+                               href="/biblioteca" 
+                               class="btn-buy" 
+                               style="background-color: #0984e3; text-decoration: none; text-align: center;">
+                               <i class="bi bi-play-fill"></i> Biblioteca
                             </a>
 
-                        </div>
+                            <form th:unless="${#lists.contains(currentUser.biblioteca, jogo)}" 
+                                  th:action="@{/comprar/{id}(id=${jogo.id})}" method="post">
+                                <button type="submit" class="btn-buy">Comprar</button>
+                            </form>
                         </div>
                     </div>
-                        <form th:if="${currentUser != null}" th:action="@{/comprar/{id}(id=${jogo.id})}" method="post">
-    <button type="submit" class="btn-buy">Comprar</button>
-</form>
+                    
+                    <div th:if="${currentUser != null && currentUser.papel == 'ADMIN'}" style="margin-top: 10px; display: flex; gap: 5px; justify-content: flex-end;">
+                        <a th:href="@{/jogos/editar/{id}(id=${jogo.id})}" style="color: #a29bfe; font-size: 0.8em; text-decoration:none;">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a th:href="@{/jogos/deletar/{id}(id=${jogo.id})}" style="color: #ff7675; font-size: 0.8em; text-decoration:none;" onclick="return confirm('Excluir?');">
+                            <i class="bi bi-trash"></i> Excluir
+                        </a>
+                    </div>
 
-<a th:if="${currentUser == null}" href="/login" class="btn-buy" style="display:block; text-align:center; text-decoration:none;">Comprar</a> 
-                    </div>
                 </div>
             </div>
         </div>
