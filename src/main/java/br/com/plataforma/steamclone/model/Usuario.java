@@ -30,6 +30,8 @@ public class Usuario {
     private String nomeDeUsuario;
     private String email;
     private String senha;
+    private String urlAvatar;
+    private String papel;
 
     // --- 5 NOVOS ATRIBUTOS ---
     private String nomeCompleto;

@@ -23,6 +23,9 @@ public class UsuarioService {
         if(usuario.getSaldoCarteira() == null) {
             usuario.setSaldoCarteira(0.0);
         }
+
+        usuario.setPapel("USER"); 
+
         return usuarioRepository.save(usuario);
     }
 }
