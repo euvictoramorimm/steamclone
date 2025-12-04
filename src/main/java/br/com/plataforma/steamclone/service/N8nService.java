@@ -13,7 +13,7 @@ import br.com.plataforma.steamclone.model.Usuario;
 public class N8nService {
 
     // 👇 IMPORTANTE: Coloque o URL do seu Webhook do n8n aqui!
-    private static final String N8N_WEBHOOK_URL = "https://n8nprojeto.app.n8n.cloud/webhook-test/steam-clone";
+    private static final String N8N_WEBHOOK_URL = "https://n8nprojeto.app.n8n.cloud/webhook/steam-clone";
 
     private final RestTemplate restTemplate = new RestTemplate();
 

@@ -3,14 +3,14 @@ package br.com.plataforma.steamclone;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder; // <-- Importante!
+import org.springframework.security.crypto.password.PasswordEncoder; 
 
 import br.com.plataforma.steamclone.model.Categoria;
 import br.com.plataforma.steamclone.model.Jogo;
-import br.com.plataforma.steamclone.model.Usuario; // <-- Importante!
+import br.com.plataforma.steamclone.model.Usuario; 
 import br.com.plataforma.steamclone.repository.CategoriaRepository;
 import br.com.plataforma.steamclone.repository.JogoRepository;
-import br.com.plataforma.steamclone.repository.UsuarioRepository; // <-- Importante!
+import br.com.plataforma.steamclone.repository.UsuarioRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +24,6 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    // 👇 NOVAS FERRAMENTAS INJETADAS 👇
     @Autowired
     private UsuarioRepository usuarioRepository;
 
