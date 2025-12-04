@@ -14,9 +14,14 @@
     </style>
 </head>
 <body>
-    <h1>Adicionar Novo Jogo</h1>
+   <h1 th:text="${jogo.id == null} ? 'Adicionar Novo Jogo' : 'Editar Jogo'">Adicionar Novo Jogo</h1>
 
-    <form th:action="@{/jogos/salvar}" th:object="${jogo}" method="post">
+   <form th:action="@{/jogos/salvar}" th:object="${jogo}" method="post">
+    
+    <input type="hidden" th:field="*{id}">
+
+    <div>
+        <label for="titulo">Título:</label>
     
         <div>
             <label for="titulo">Título:</label>

@@ -47,6 +47,20 @@
                         <div class="game-price" th:text="${'R$ ' + #numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">
                             R$ 99,90
                         </div>
+                        
+                        <div style="display: flex; gap: 5px;">
+                            <a th:href="@{/jogos/editar/{id}(id=${jogo.id})}" 
+                               style="background-color: #333; color: #a29bfe; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.9em;">
+                               Editar
+                            </a>
+                            
+                            <a th:href="@{/jogos/deletar/{id}(id=${jogo.id})}" 
+                               style="background-color: #333; color: #ff7675; padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.9em;"
+                               onclick="return confirm('Tem certeza que deseja excluir este jogo?');">
+                               Excluir
+                            </a>
+                        </div>
+                    </div>
                         <button class="btn-buy">Comprar</button>
                     </div>
                 </div>

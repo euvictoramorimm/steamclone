@@ -6,12 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import br.com.plataforma.steamclone.model.Jogo;
 import br.com.plataforma.steamclone.model.Usuario;
 import br.com.plataforma.steamclone.repository.JogoRepository;
-import br.com.plataforma.steamclone.repository.UsuarioRepository; // <-- Import novo
+import br.com.plataforma.steamclone.repository.UsuarioRepository;
 import br.com.plataforma.steamclone.service.UsuarioService;
+
 
 import java.security.Principal; // <-- Import fundamental para saber quem logou
 import java.util.List;
@@ -48,7 +49,31 @@ public class WebController {
             }
         }
 
+        
+
         return "index";
+
+        
+    }
+
+    // --- MÉTODOS DE EDIÇÃO E EXCLUSÃO ---
+
+    // 1. EDITAR: Busca o jogo pelo ID e mostra o formulário preenchido
+    @GetMapping("/jogos/editar/{id}")
+    public String mostrarFormularioEditarJogo(@PathVariable Long id, Model model) {
+        Optional<Jogo> jogoOpt = jogoRepository.findById(id);
+        if (jogoOpt.isPresent()) {
+            model.addAttribute("jogo", jogoOpt.get());
+            return "form-jogo"; // Reusa o mesmo formulário!
+        }
+        return "redirect:/";
+    }
+
+    // 2. DELETAR: Apaga o jogo pelo ID
+    @GetMapping("/jogos/deletar/{id}")
+    public String deletarJogo(@PathVariable Long id) {
+        jogoRepository.deleteById(id);
+        return "redirect:/";
     }
 
     // ... (Mantenha o resto dos métodos /jogos/novo, /registrar, /login iguais) ...
