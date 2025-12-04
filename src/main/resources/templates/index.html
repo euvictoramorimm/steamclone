@@ -2,41 +2,56 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Steam Clone</title>
+    <title>SteamClone - Loja</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-    <h1>Loja de Jogos - Steam Clone</h1>
-    
-    <a href="/jogos/novo" style="color: #a29bfe; font-size: 1.2em; margin-bottom: 20px; display: inline-block;">
-        + Adicionar Novo Jogo
-    </a>
+    <nav class="navbar">
+        <a href="/" class="logo">Steam<span>Clone</span></a>
 
-    <a href="/login" style="color: #55efc4; font-size: 1.2em; margin-left: 20px; text-decoration: none;">
-        [ Entrar ]
-    </a>
-    
-    <a href="/registrar" style="color: #74b9ff; font-size: 1.2em; margin-left: 20px; text-decoration: none;">
-        [ Criar Conta ]
-    </a>
+        <div class="nav-links">
+            <a href="/jogos/novo" class="nav-btn">+ Add Jogo</a>
+            
+            <div th:if="${currentUser == null}" style="display: flex; gap: 15px;">
+                <a href="/login" class="nav-btn">Entrar</a>
+                <a href="/registrar" class="btn-primary">Criar Conta</a>
+            </div>
 
-    <div class="game-grid">
-        
-        <div class="game-card" th:each="jogo : ${jogos}">
-            
-            <img th:src="${jogo.urlCapa}" alt="Capa do Jogo">
-            
-            <div class="game-details">
-                <div class="game-title" th:text="${jogo.titulo}">Título do Jogo</div>
-                <div class="game-dev" th:text="${jogo.desenvolvedor}">Desenvolvedor</div>
+            <div th:if="${currentUser != null}" style="display: flex; align-items: center; gap: 20px;">
+                <span style="color: #fff;">
+                    Olá, <b th:text="${currentUser.nomeCompleto}">Usuário</b>
+                    <span style="color: #4cd137; font-size: 0.8em; margin-left: 5px;" 
+                          th:text="'(R$ ' + ${currentUser.saldoCarteira} + ')'"></span>
+                </span>
                 
-                <div class="game-price" th:text="${'R$ ' + #numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">
-                    R$ 99,90
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="section-title">Destaques da Semana</h2>
+
+        <div class="game-grid">
+            <div class="game-card" th:each="jogo : ${jogos}">
+                <img th:src="${jogo.urlCapa}" alt="Capa do Jogo">
+                
+                <div class="game-details">
+                    <div class="game-title" th:text="${jogo.titulo}">Título</div>
+                    <div class="game-dev" th:text="${jogo.desenvolvedor}">Desenvolvedor</div>
+                    
+                    <div class="game-footer">
+                        <div class="game-price" th:text="${'R$ ' + #numbers.formatDecimal(jogo.preco, 1, 'POINT', 2, 'COMMA')}">
+                            R$ 99,90
+                        </div>
+                        <button class="btn-buy">Comprar</button>
+                    </div>
                 </div>
             </div>
         </div>
-        
     </div>
 
 </body>

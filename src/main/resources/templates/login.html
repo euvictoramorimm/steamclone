@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Steam Clone</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* Reutilizando o estilo bonito que você já tem */
+        form { max-width: 400px; margin: 2em auto; }
+        div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; background: #333; color: #eee; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
+        button { background: #55efc4; color: #111; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        .error { color: #ff7675; background: rgba(255, 0, 0, 0.1); padding: 10px; border-radius: 4px; border: 1px solid #ff7675; text-align: center; margin-bottom: 15px;}
+        a { display: block; text-align: center; margin-top: 15px; color: #74b9ff; text-decoration: none;}
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Entrar na Loja</h1>
+
+    <form th:action="@{/login}" method="post">
+        
+        <div th:if="${param.error}" class="error">
+            Email ou senha inválidos. Tente novamente.
+        </div>
+
+        <div th:if="${param.logout}" class="error" style="color: #55efc4; border-color: #55efc4;">
+            Você saiu da conta com sucesso.
+        </div>
+
+        <div>
+            <label for="username">Email:</label>
+            <input type="text" id="username" name="username" placeholder="seu@email.com" required autofocus>
+        </div>
+        
+        <div>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <button type="submit">Entrar</button>
+        
+        <a href="/registrar">Não tem conta? Crie uma aqui.</a>
+    </form>
+</body>
+</html>
