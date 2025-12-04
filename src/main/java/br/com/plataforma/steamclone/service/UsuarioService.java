@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.plataforma.steamclone.model.Usuario;
 import br.com.plataforma.steamclone.repository.UsuarioRepository;
+import java.util.Optional;
 @Service
-public class UsuarioService {
+public class UsuarioService implements IUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -35,4 +36,8 @@ public class UsuarioService {
         
         return usuarioSalvo;
     }
+    @Override 
+    public Optional<Usuario> buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }    
 }
